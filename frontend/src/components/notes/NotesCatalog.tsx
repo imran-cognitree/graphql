@@ -16,7 +16,7 @@ interface NotesCatalogProps {
 }
 
 export default function NotesCatalog({ onOpenCreateModal }: NotesCatalogProps) {
-  const { loading, error, data } = useQuery<{ notes: Note[] }>(GET_NOTES);
+  const { loading, error, data } = useQuery(GET_NOTES);
 
   const [viewNote, setViewNote] = useState<Note | null>(null);
   const [editNote, setEditNote] = useState<Note | null>(null);

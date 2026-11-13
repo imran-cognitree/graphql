@@ -9,7 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
-import type { Note, Tag, CreateNoteInput, UpdateNoteInput } from '../../types/note';
+import type { Note, Tag } from '../../types/note';
 import { GET_NOTES, GET_TAGS } from '../../graphql/queries';
 import { CREATE_NOTE, UPDATE_NOTE, CREATE_TAG } from '../../graphql/mutations';
 
@@ -29,23 +29,16 @@ export default function NoteFormModal({ open, onClose, note }: NoteFormModalProp
   const [content, setContent] = useState('');
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
-  const { data: tagsData } = useQuery<{ tags: Tag[] }>(GET_TAGS);
-  const [createNote, { loading: creating }] = useMutation<
-    { createNote: Note },
-    { input: CreateNoteInput }
-  >(CREATE_NOTE, {
+  const { data: tagsData } = useQuery(GET_TAGS);
+  const [createNote, { loading: creating }] = useMutation(CREATE_NOTE, {
     refetchQueries: [{ query: GET_NOTES }],
   });
-  const [updateNote, { loading: updating }] = useMutation<
-    { updateNote: Note },
-    { id: string; input: UpdateNoteInput }
-  >(UPDATE_NOTE, {
+
+  const [updateNote, { loading: updating }] = useMutation(UPDATE_NOTE, {
     refetchQueries: [{ query: GET_NOTES }],
   });
-  const [createTag] = useMutation<
-    { createTag: Tag },
-    { name: string }
-  >(CREATE_TAG, {
+
+  const [createTag] = useMutation(CREATE_TAG, {
     refetchQueries: [{ query: GET_TAGS }],
   });
 

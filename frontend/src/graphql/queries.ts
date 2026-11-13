@@ -1,6 +1,8 @@
 import { gql } from '@apollo/client/core';
+import type { TypedDocumentNode } from '@apollo/client/core';
+import type { Note, Tag } from '../types/note';
 
-export const GET_NOTES = gql`
+export const GET_NOTES: TypedDocumentNode<{ notes: Note[] }> = gql`
   query GetNotes {
     notes {
       id
@@ -15,7 +17,7 @@ export const GET_NOTES = gql`
   }
 `;
 
-export const GET_TAGS = gql`
+export const GET_TAGS: TypedDocumentNode<{ tags: Tag[] }> = gql`
   query GetTags {
     tags {
       id
