@@ -1,0 +1,60 @@
+# Object Types
+# These define the shapes of data the client can read.
+# Think of them like response models in FastAPI (Pydantic BaseModel).
+
+type Tag {
+    id: ID!           # ID scalar — signals "this is a unique identifier"
+    name: String!     # ! = non-null, always present
+}
+
+type Note {
+    id: ID!
+    title: String!    # required — a note must always have a title
+    content: String   # nullable — content is optional
+    createdAt: String # we return this as a formatted String for simplicity
+    tags: [Tag!]!     # non-null list of non-null Tags (can be empty [], never null)
+}
+
+
+# ── Input Types ──────────────────────────────────────────────
+# Used ONLY as arguments to mutations — the "write" shapes.
+# Rule: input types cannot reference object types (like Note or Tag),
+# only scalars and other input types.
+
+input CreateNoteInput {
+    title: String!     # required when creating
+    content: String    # optional
+    tagIds: [ID!]      # optional list of existing tag IDs to attach
+}
+
+input UpdateNoteInput {
+    title: String      # all fields nullable — send only what you want to change
+    content: String    # partial updates supported
+    tagIds: [ID!]      # replaces all tags if provided
+}
+
+
+# Root Query Type
+# Every field here = one readable operation.
+# Equivalent to: GET endpoints in REST.
+
+type Query {
+    notes: [Note!]!          # get all notes — always a list, never null
+    note(id: ID!): Note      # get one note by ID — nullable (returns null if not found)
+    tags: [Tag!]!            # get all tags
+}
+
+
+# Root Mutation Type
+# Every field here = one write operation.
+# Equivalent to: POST / PUT / DELETE endpoints in REST.
+
+type Mutation {
+    # Notes
+    createNote(input: CreateNoteInput!): Note!    # returns the created note
+    updateNote(id: ID!, input: UpdateNoteInput!): Note!  # returns updated note
+    deleteNote(id: ID!): Boolean!                  # returns true on success
+
+    # Tags
+    createTag(name: String!): Tag!
+}
